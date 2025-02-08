@@ -42,4 +42,20 @@ public class CommentController {
         );
         return ResponseEntity.ok(response);
     }
+
+
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<ApiResponse<Void>> deleteComment(@PathVariable Long commentId) {
+        commentService.deleteComment(commentId);
+
+        ApiResponse<Void> response = new ApiResponse<>(
+                true,
+                HttpStatus.OK.value(),
+                "comment deleted successfully",
+                null
+        );
+
+        return ResponseEntity.ok(response);
+    }
+
 }

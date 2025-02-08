@@ -58,9 +58,45 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+
+    @PutMapping("/{postId}")
+    public ResponseEntity<ApiResponse<Post>> updatePost(
+            @PathVariable Long postId,
+            @Valid @RequestBody Post updatedPost) {
+
+        Post post = postService.updatePost(postId, updatedPost);
+
+        ApiResponse<Post> response = new ApiResponse<>(
+                true,
+                HttpStatus.OK.value(),
+                "Post updated successfully",
+                post
+        );
+
+        return ResponseEntity.ok(response);
+    }
+
+
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<ApiResponse<Void>> deletePost(@PathVariable Long postId) {
+        postService.deletePost(postId);
+
+        ApiResponse<Void> response = new ApiResponse<>(
+                true,
+                HttpStatus.OK.value(),
+                "Post deleted successfully",
+                null
+        );
+
+        return ResponseEntity.ok(response);
+    }
+
+
+
     @PostMapping("/{postId}/like")
     public ResponseEntity<ApiResponse<Post>> likePost(@PathVariable Long postId, HttpServletRequest request) {
         String token = extractToken(request);
+        System.out.println(token);
         Long userId = jwtUtil.extractUserId(token);
         return postService.likePost(postId, userId);
     }

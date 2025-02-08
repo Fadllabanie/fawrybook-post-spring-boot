@@ -2,6 +2,7 @@ package com.Fawrybook.Fawrybook.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -24,6 +25,8 @@ public class Post {
     private String content;
 
     private int likes = 0;
+    @Null
+    private  String twitterShareUrl;
 
     @CreationTimestamp
     @Column(updatable = false)
@@ -56,4 +59,20 @@ public class Post {
     public void setContent(String content) { this.content = content; }
     public void setLikes(int likes) { this.likes = likes; }
     public void setComments(List<Comment> comments) { this.comments = comments; }
+
+    public String getTwitterShareUrl() {
+        return twitterShareUrl;
+    }
+
+    public void setTwitterShareUrl(String twitterShareUrl) {
+        this.twitterShareUrl = twitterShareUrl;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }

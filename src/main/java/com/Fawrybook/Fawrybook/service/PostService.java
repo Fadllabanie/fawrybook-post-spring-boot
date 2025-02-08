@@ -4,6 +4,8 @@ import com.Fawrybook.Fawrybook.dto.ApiResponse;
 import com.Fawrybook.Fawrybook.dto.CommentDTO;
 import com.Fawrybook.Fawrybook.dto.PostDTO;
 import com.Fawrybook.Fawrybook.enums.ReactionType;
+import com.Fawrybook.Fawrybook.exceptions.PostNotFoundException;
+import com.Fawrybook.Fawrybook.exceptions.UserAlreadyExistsException;
 import com.Fawrybook.Fawrybook.model.Post;
 import com.Fawrybook.Fawrybook.model.PostReaction;
 import com.Fawrybook.Fawrybook.model.User;
@@ -38,16 +40,26 @@ public class PostService {
     }
     public Page<PostDTO> getAllPosts(Pageable pageable) {
         Page<Post> posts = postRepository.findAll(pageable);
+        double averageLikes = calculateAverageLikes();
 
         return posts.map(post -> {
             List<CommentDTO> commentDTOs = post.getComments().stream()
                     .map(comment -> new CommentDTO(comment.getId(), comment.getText(), comment.getCreatedAt()))
                     .collect(Collectors.toList());
 
-            return new PostDTO(post.getId(), post.getTitle(), post.getContent(), post.getCreatedAt(), post.getLikes(), commentDTOs);
+            return new PostDTO(post.getId(), post.getTitle(), post.getContent(), post.getCreatedAt(), post.getLikes(), commentDTOs, averageLikes,post.getTwitterShareUrl());
         });
     }
 
+
+    private double calculateAverageLikes() {
+        long totalLikes = postRepository.findAll().stream().mapToLong(Post::getLikes).sum();
+        long totalPosts = postRepository.count();
+
+        if (totalPosts == 0) return 0.0; // Prevent division by zero
+
+        return (double) totalLikes / totalPosts;
+    }
 
     public Post getPost(Long id) {
         return postRepository.getById(id);
@@ -56,6 +68,33 @@ public class PostService {
     public Post createPost(@Valid Post post) {
         return postRepository.save(post);
     }
+
+    public Post updatePost(Long postId, Post updatedPost) {
+        return postRepository.findById(postId).map(existingPost -> {
+            existingPost.setTitle(updatedPost.getTitle());
+            existingPost.setContent(updatedPost.getContent());
+            return postRepository.save(existingPost);
+        }).orElseThrow(() -> new RuntimeException("Post not found with id " + postId));
+    }
+
+
+    public void deletePost(Long postId) {
+        if (!postRepository.existsById(postId)) {
+            throw new PostNotFoundException("Post not found with id " + postId);
+        }
+        postRepository.deleteById(postId);
+    }
+
+
+    public double getAverageLikes() {
+        long totalLikes = postRepository.findAll().stream().mapToLong(Post::getLikes).sum();
+        long totalPosts = postRepository.count();
+
+        if (totalPosts == 0) return 0.0; // Prevent division by zero
+
+        return (double) totalLikes / totalPosts;
+    }
+
 
     public ResponseEntity<ApiResponse<Post>> likePost(Long postId, Long userId) {
         Optional<Post> postOptional = postRepository.findById(postId);
@@ -113,5 +152,10 @@ public class PostService {
         postRepository.save(post);
 
         return ResponseEntity.ok(new ApiResponse<>(true, HttpStatus.OK.value(), "Post disliked successfully", post));
+    }
+
+    public String getMessageFromPost(Long postId) {
+        Post post =  postRepository.getById(postId);
+        return  post.getContent();
     }
 }

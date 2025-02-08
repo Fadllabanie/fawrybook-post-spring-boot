@@ -1,6 +1,8 @@
 package com.Fawrybook.Fawrybook.service;
 
 import com.Fawrybook.Fawrybook.dto.CommentDTO;
+import com.Fawrybook.Fawrybook.exceptions.PostNotFoundException;
+import com.Fawrybook.Fawrybook.exceptions.commentNotFoundException;
 import com.Fawrybook.Fawrybook.helpers.TextHelper;
 import com.Fawrybook.Fawrybook.model.Comment;
 import com.Fawrybook.Fawrybook.model.Post;
@@ -46,6 +48,14 @@ public class CommentService {
 
         return new CommentDTO(comment.getId(), comment.getText(), comment.getCreatedAt());
     }
+
+    public void deleteComment(Long commentId) {
+        if (!postRepository.existsById(commentId)) {
+            throw new commentNotFoundException("commentId not found with id " + commentId);
+        }
+        postRepository.deleteById(commentId);
+    }
+
 
     public List<CommentDTO> getCommentsForPost(Long postId) {
         return commentRepository.findByPostId(postId)
