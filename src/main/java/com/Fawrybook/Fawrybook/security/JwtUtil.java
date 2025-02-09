@@ -1,6 +1,5 @@
 package com.Fawrybook.Fawrybook.security;
 
-import com.Fawrybook.Fawrybook.repository.RevokedTokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -19,8 +18,6 @@ import java.util.Base64;
 @Component
 public class JwtUtil {
 
-    @Autowired
-    private RevokedTokenRepository revokedTokenRepository;
 
     private final SecretKey secretKey;
 
@@ -72,19 +69,9 @@ public class JwtUtil {
         return claimsResolver.apply(claims);
     }
 
-    public boolean validateToken(String token, String username) {
-        System.out.println("🔗 x7 ");
-        final String extractedUsername = extractUsername(token);
-        return extractedUsername.equals(username) && !isTokenExpired(token) && !isTokenRevoked(token) ;
-    }
-
     public boolean isTokenExpired(String token) {
         System.out.println("🔗 x8 ");
         return extractClaim(token, Claims::getExpiration).before(new Date());
     }
 
-    private Boolean isTokenRevoked(String token) {
-        System.out.println("🔗 x9 ");
-        return revokedTokenRepository.findByToken(token).isPresent();
-    }
 }
