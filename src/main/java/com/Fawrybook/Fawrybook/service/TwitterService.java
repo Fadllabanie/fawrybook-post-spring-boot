@@ -1,41 +1,41 @@
 package com.Fawrybook.Fawrybook.service;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import twitter4j.Status;
 import twitter4j.Twitter;
+import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
-import twitter4j.conf.ConfigurationBuilder;
 
 @Service
 public class TwitterService {
 
-    private final Twitter twitter;
+    @Value("${twitter.api.key}")
+    private String apiKey;
 
-    public TwitterService(
-            @Value("${twitter.api.key}") String apiKey,
-            @Value("${twitter.api.secret}") String apiSecret,
-            @Value("${twitter.access.token}") String accessToken,
-            @Value("${twitter.access.token.secret}") String accessTokenSecret
-    ) {
-        ConfigurationBuilder cb = new ConfigurationBuilder();
-        cb.setDebugEnabled(true)
-                .setOAuthConsumerKey(apiKey)
-                .setOAuthConsumerSecret(apiSecret)
-                .setOAuthAccessToken(accessToken)
-                .setOAuthAccessTokenSecret(accessTokenSecret);
+    @Value("${twitter.api.secret}")
+    private String apiSecret;
 
-        TwitterFactory tf = new TwitterFactory(cb.build());
-        this.twitter = tf.getInstance();
+    @Value("${twitter.access.token}")
+    private String accessToken;
+
+    @Value("${twitter.access.secret}")
+    private String accessSecret;
+
+    private Twitter getTwitterInstance() {
+        Twitter twitter = new TwitterFactory().getInstance();
+        twitter.setOAuthConsumer(apiKey, apiSecret);
+        twitter.setOAuthAccessToken(new AccessToken(accessToken, accessSecret));
+        return twitter;
     }
 
-    public String tweetPost(String message) {
+    public String postTweet(String tweetText) {
         try {
-            Status status = twitter.updateStatus(message);
+            Twitter twitter = getTwitterInstance();
+            Status status = twitter.updateStatus(tweetText);
             return "Tweet posted successfully: " + status.getText();
-        } catch (Exception e) {
-            return "Failed to post tweet: " + e.getMessage();
+        } catch (TwitterException e) {
+            return "Failed to post tweet: " + e.getErrorMessage();
         }
     }
 }

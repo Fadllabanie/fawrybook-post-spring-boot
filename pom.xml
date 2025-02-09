@@ -108,7 +108,11 @@
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 			<version>4.2.0</version>
 		</dependency>
-
+		<dependency>
+			<groupId>com.konghq</groupId>
+			<artifactId>unirest-java</artifactId>
+			<version>3.11.09</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.twitter4j</groupId>

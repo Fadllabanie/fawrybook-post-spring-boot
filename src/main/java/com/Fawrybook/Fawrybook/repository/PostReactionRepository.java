@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface PostReactionRepository extends JpaRepository<PostReaction, Long> {
-    Optional<PostReaction> findByUserAndPost(User user, Post post);
-    boolean existsByUserAndPostAndReactionType(User user, Post post, ReactionType reactionType);
+    Optional<PostReaction> findByUserIdAndPost(Long userId, Post post);
+    boolean existsByUserIdAndPostAndReactionType(Long userId, Post post, ReactionType reactionType);
 }
+

@@ -11,6 +11,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
+@Table(name = "posts", indexes = {
+        @Index(name = "idx_title", columnList = "title")
+})
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +25,7 @@ public class Post {
 
     @NotBlank(message = "Content cannot be empty")
     @Size(min = 10, message = "Content must be at least 10 characters long")
+    @Column(columnDefinition = "LONGTEXT")
     private String content;
 
     private int likes = 0;

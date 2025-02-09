@@ -86,73 +86,7 @@ public class PostService {
     }
 
 
-    public double getAverageLikes() {
-        long totalLikes = postRepository.findAll().stream().mapToLong(Post::getLikes).sum();
-        long totalPosts = postRepository.count();
 
-        if (totalPosts == 0) return 0.0; // Prevent division by zero
-
-        return (double) totalLikes / totalPosts;
-    }
-
-
-    public ResponseEntity<ApiResponse<Post>> likePost(Long postId, Long userId) {
-        Optional<Post> postOptional = postRepository.findById(postId);
-        Optional<User> userOptional = userRepository.findById(userId);
-
-        if (postOptional.isEmpty() || userOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ApiResponse<>(false, HttpStatus.NOT_FOUND.value(), "Post or User not found", null));
-        }
-
-        Post post = postOptional.get();
-        User user = userOptional.get();
-
-        if (postReactionRepository.existsByUserAndPostAndReactionType(user, post, ReactionType.LIKE)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ApiResponse<>(false, HttpStatus.BAD_REQUEST.value(), "You have already liked this post", post));
-        }
-
-        PostReaction reaction = new PostReaction();
-        reaction.setUser(user);
-        reaction.setPost(post);
-        reaction.setReactionType(ReactionType.LIKE);
-        postReactionRepository.save(reaction);
-
-        post.setLikes(post.getLikes() + 1);
-        postRepository.save(post);
-
-        return ResponseEntity.ok(new ApiResponse<>(true, HttpStatus.OK.value(), "Post liked successfully", post));
-    }
-
-    public ResponseEntity<ApiResponse<Post>> dislikePost(Long postId, Long userId) {
-        Optional<Post> postOptional = postRepository.findById(postId);
-        Optional<User> userOptional = userRepository.findById(userId);
-
-        if (postOptional.isEmpty() || userOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ApiResponse<>(false, HttpStatus.NOT_FOUND.value(), "Post or User not found", null));
-        }
-
-        Post post = postOptional.get();
-        User user = userOptional.get();
-
-        if (postReactionRepository.existsByUserAndPostAndReactionType(user, post, ReactionType.DISLIKE)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ApiResponse<>(false, HttpStatus.BAD_REQUEST.value(), "You have already disliked this post", post));
-        }
-
-        PostReaction reaction = new PostReaction();
-        reaction.setUser(user);
-        reaction.setPost(post);
-        reaction.setReactionType(ReactionType.DISLIKE);
-        postReactionRepository.save(reaction);
-
-        post.setLikes(post.getLikes() - 1);
-        postRepository.save(post);
-
-        return ResponseEntity.ok(new ApiResponse<>(true, HttpStatus.OK.value(), "Post disliked successfully", post));
-    }
 
     public String getMessageFromPost(Long postId) {
         Post post =  postRepository.getById(postId);

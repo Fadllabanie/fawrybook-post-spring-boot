@@ -91,28 +91,4 @@ public class PostController {
         return ResponseEntity.ok(response);
     }
 
-
-
-    @PostMapping("/{postId}/like")
-    public ResponseEntity<ApiResponse<Post>> likePost(@PathVariable Long postId, HttpServletRequest request) {
-        String token = extractToken(request);
-        System.out.println(token);
-        Long userId = jwtUtil.extractUserId(token);
-        return postService.likePost(postId, userId);
-    }
-
-    @PostMapping("/{postId}/dislike")
-    public ResponseEntity<ApiResponse<Post>> dislikePost(@PathVariable Long postId, HttpServletRequest request) {
-        String token = extractToken(request);
-        Long userId = jwtUtil.extractUserId(token);
-        return postService.dislikePost(postId, userId);
-    }
-
-    private String extractToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7); // Remove "Bearer " prefix
-        }
-        return null;
-    }
 }

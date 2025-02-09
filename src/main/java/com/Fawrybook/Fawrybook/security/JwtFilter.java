@@ -1,10 +1,14 @@
 package com.Fawrybook.Fawrybook.security;
 
+import com.Fawrybook.Fawrybook.dto.ApiResponse;
+import com.Fawrybook.Fawrybook.model.Post;
 import com.Fawrybook.Fawrybook.service.AuthServiceFeignClient;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,8 +42,22 @@ public class JwtFilter extends OncePerRequestFilter {
 
             boolean isValid = validateTokenWithAuthService(token);
             if (!isValid) {
+                // Set response type to JSON
+                response.setContentType("application/json");
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("Unauthorized - Invalid token");
+
+                // Create an ApiResponse for unauthorized access
+                ApiResponse<Object> errorResponse = new ApiResponse<>(
+                        false,
+                        HttpStatus.UNAUTHORIZED.value(),
+                        "Unauthorized - Invalid token",
+                        null
+                );
+
+                // Convert ApiResponse to JSON and write to response
+                ObjectMapper objectMapper = new ObjectMapper();
+                response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+                response.getWriter().flush();
                 return;
             }
 
@@ -55,7 +73,6 @@ public class JwtFilter extends OncePerRequestFilter {
         chain.doFilter(request, response);
     }
 
-    // ✅ Validate token using Feign Client
     private boolean validateTokenWithAuthService(String token) {
         try {
             System.out.println("🔗 Sending token to auth-service for validation...");
