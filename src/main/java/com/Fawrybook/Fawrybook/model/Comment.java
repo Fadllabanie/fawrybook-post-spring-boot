@@ -28,6 +28,8 @@ public class Comment {
     @JsonIgnore
     private Post post;
 
+    private Long userId;
+
     public String getText() {
         return text;
     }
@@ -38,6 +40,14 @@ public class Comment {
 
     public Long getId() {
         return id;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public void setId(Long id) {

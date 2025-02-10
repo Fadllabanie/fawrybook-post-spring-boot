@@ -1,28 +1,18 @@
 package com.Fawrybook.Fawrybook.service;
 
 import com.Fawrybook.Fawrybook.dto.ApiResponse;
-import com.Fawrybook.Fawrybook.dto.CommentDTO;
-import com.Fawrybook.Fawrybook.dto.PostDTO;
 import com.Fawrybook.Fawrybook.enums.ReactionType;
-import com.Fawrybook.Fawrybook.exceptions.PostNotFoundException;
 import com.Fawrybook.Fawrybook.model.Post;
 import com.Fawrybook.Fawrybook.model.PostReaction;
-import com.Fawrybook.Fawrybook.model.User;
 import com.Fawrybook.Fawrybook.repository.PostReactionRepository;
 import com.Fawrybook.Fawrybook.repository.PostRepository;
-import com.Fawrybook.Fawrybook.repository.UserRepository;
 import com.Fawrybook.Fawrybook.security.JwtUtil;
-import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Validated

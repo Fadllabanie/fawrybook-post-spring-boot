@@ -14,14 +14,16 @@ public class PostDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
     private int likes;
+    private Long userId;
     private List<CommentDTO> comments;
     private double averageLikes = 0.0;
     private  String twitterShareUrl;
 
-    public PostDTO(Long id, String title, String content, LocalDateTime createdAt, int likes, List<CommentDTO> comments,double averageLikes,String twitterShareUrl) {
+    public PostDTO(Long id, String title, String content,Long userId, LocalDateTime createdAt, int likes, List<CommentDTO> comments,double averageLikes,String twitterShareUrl) {
         this.id = id;
         this.title = title;
         this.content = content;
+        this.userId = userId;
         this.createdAt = createdAt;
         this.likes = likes;
         this.comments = comments;
@@ -30,6 +32,13 @@ public class PostDTO {
 
     }
 
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
     public Long getId() {
         return id;

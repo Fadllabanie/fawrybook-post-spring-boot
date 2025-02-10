@@ -8,7 +8,7 @@ public class HelloController {
     
     @GetMapping("/")
     public String welcome(){
-        return "Welcome to Fawrybook Api";
+        return "Welcome to Fawrybook Api from post ";
     }
     
 }

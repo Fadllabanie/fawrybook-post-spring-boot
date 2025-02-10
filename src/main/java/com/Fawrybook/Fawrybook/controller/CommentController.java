@@ -3,6 +3,7 @@ package com.Fawrybook.Fawrybook.controller;
 import com.Fawrybook.Fawrybook.dto.ApiResponse;
 import com.Fawrybook.Fawrybook.dto.CommentDTO;
 import com.Fawrybook.Fawrybook.service.CommentService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +21,8 @@ public class CommentController {
     }
 
     @PostMapping("/{postId}")
-    public ResponseEntity<ApiResponse<CommentDTO>> addComment(@Valid @PathVariable Long postId, @RequestBody String text) {
-        CommentDTO commentDTO = commentService.addComment(postId, text); // ✅ Now using `CommentDTO`
+    public ResponseEntity<ApiResponse<CommentDTO>> addComment(@Valid @PathVariable Long postId, @RequestBody String text, HttpServletRequest request) {
+        CommentDTO commentDTO = commentService.addComment(postId, text,request);
         ApiResponse<CommentDTO> response = new ApiResponse<>(
                 true,
                 HttpStatus.CREATED.value(),
@@ -33,7 +34,7 @@ public class CommentController {
 
     @GetMapping("/{postId}")
     public ResponseEntity<ApiResponse<List<CommentDTO>>> getComments(@PathVariable Long postId) {
-        List<CommentDTO> comments = commentService.getCommentsForPost(postId); // ✅ Now using `CommentDTO`
+        List<CommentDTO> comments = commentService.getCommentsForPost(postId);
         ApiResponse<List<CommentDTO>> response = new ApiResponse<>(
                 true,
                 HttpStatus.OK.value(),
@@ -45,8 +46,8 @@ public class CommentController {
 
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<ApiResponse<Void>> deleteComment(@PathVariable Long commentId) {
-        commentService.deleteComment(commentId);
+    public ResponseEntity<ApiResponse<Void>> deleteComment(@PathVariable Long commentId,HttpServletRequest request) {
+        commentService.deleteComment(commentId,request);
 
         ApiResponse<Void> response = new ApiResponse<>(
                 true,

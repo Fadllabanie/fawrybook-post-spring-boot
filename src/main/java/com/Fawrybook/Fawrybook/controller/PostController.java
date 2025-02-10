@@ -46,9 +46,17 @@ public class PostController {
     }
 
 
+    @GetMapping("/{postId}") // Todo : if not find
+    public ResponseEntity<ApiResponse<PostDTO>> getPostById(@PathVariable Long postId) {
+        return postService.getPostById(postId)
+                .map(postDTO -> ResponseEntity.ok(new ApiResponse<>(true, HttpStatus.OK.value(), "Post retrieved successfully", postDTO)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+
     @PostMapping
-    public ResponseEntity<ApiResponse<Post>> createPost(@Valid @RequestBody Post post) {
-    Post savedPost = postService.createPost(post);
+    public ResponseEntity<ApiResponse<Post>> createPost(@Valid @RequestBody Post post,HttpServletRequest request) {
+    Post savedPost = postService.createPost(post,request);
         ApiResponse<Post> response = new ApiResponse<>(
                 true,
                 HttpStatus.CREATED.value(),
@@ -62,10 +70,9 @@ public class PostController {
     @PutMapping("/{postId}")
     public ResponseEntity<ApiResponse<Post>> updatePost(
             @PathVariable Long postId,
-            @Valid @RequestBody Post updatedPost) {
-
-        Post post = postService.updatePost(postId, updatedPost);
-
+            @Valid @RequestBody Post updatedPost,
+            HttpServletRequest request) {
+        Post post = postService.updatePost(postId, updatedPost,request);
         ApiResponse<Post> response = new ApiResponse<>(
                 true,
                 HttpStatus.OK.value(),
@@ -78,8 +85,8 @@ public class PostController {
 
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<ApiResponse<Void>> deletePost(@PathVariable Long postId) {
-        postService.deletePost(postId);
+    public ResponseEntity<ApiResponse<Void>> deletePost(@PathVariable Long postId,HttpServletRequest request) {
+        postService.deletePost(postId,request);
 
         ApiResponse<Void> response = new ApiResponse<>(
                 true,

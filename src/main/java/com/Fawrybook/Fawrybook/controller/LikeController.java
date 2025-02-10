@@ -38,6 +38,7 @@ public class LikeController {
     public ResponseEntity<ApiResponse<Post>> dislikePost(@PathVariable Long postId, HttpServletRequest request) {
         String token = extractToken(request);
         Long userId = jwtUtil.extractUserId(token);
+
         return likeService.dislikePost(postId, token);
     }
 
