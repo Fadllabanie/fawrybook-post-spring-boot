@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@FeignClient(name = "fawrybook-auth", url = "http://localhost:8765/fawrybook-auth/api/v1/auth")
+// @FeignClient(name = "fawrybook-auth", url = "http://localhost:8765/fawrybook-auth/api/v1/auth")
+@FeignClient(name = "fawrybook-auth", url = "http://api-gateway:8765/fawrybook-auth/api/v1/auth")
 public interface AuthServiceFeignClient {
 
     @PostMapping(value = "/check-token", consumes = "application/json")
