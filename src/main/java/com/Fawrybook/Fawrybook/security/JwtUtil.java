@@ -31,33 +31,9 @@ public class JwtUtil {
         this.secretKey = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String generateToken(String username, Long userId) {
-        System.out.println("🔗 x2 ");
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("userId", userId); // Store userId in JWT
-        return createToken(claims, username);
-    }
-
-
-    private String createToken(Map<String, Object> claims, String subject) {
-        System.out.println("🔗 x3");
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(subject)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
-                .signWith(secretKey, SignatureAlgorithm.HS256)
-                .compact();
-    }
-
     public Long extractUserId(String token) {
         System.out.println("🔗 x4 ");
         return extractClaim(token, claims -> claims.get("userId", Long.class));
-    }
-
-    public String extractUsername(String token) {
-        System.out.println("🔗 x5 ");
-        return extractClaim(token, Claims::getSubject);
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -76,11 +52,6 @@ public class JwtUtil {
             return bearerToken.substring(7); // Remove "Bearer " prefix
         }
         return null;
-    }
-
-    public boolean isTokenExpired(String token) {
-        System.out.println("🔗 x8 ");
-        return extractClaim(token, Claims::getExpiration).before(new Date());
     }
 
 }

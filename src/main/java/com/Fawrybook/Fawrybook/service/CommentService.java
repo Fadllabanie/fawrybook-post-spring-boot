@@ -3,7 +3,6 @@ package com.Fawrybook.Fawrybook.service;
 import com.Fawrybook.Fawrybook.dto.CommentDTO;
 import com.Fawrybook.Fawrybook.exceptions.PostNotFoundException;
 import com.Fawrybook.Fawrybook.exceptions.UnauthorizedActionException;
-import com.Fawrybook.Fawrybook.exceptions.commentNotFoundException;
 import com.Fawrybook.Fawrybook.helpers.TextHelper;
 import com.Fawrybook.Fawrybook.model.Comment;
 import com.Fawrybook.Fawrybook.model.Post;

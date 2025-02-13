@@ -43,7 +43,6 @@ public class PostService {
         });
     }
 
-
     public Optional<PostDTO> getPostById(Long postId) {
         return postRepository.findById(postId).map(post -> {
             List<CommentDTO> commentDTOs = post.getComments().stream()
@@ -74,10 +73,6 @@ public class PostService {
         return (double) totalLikes / totalPosts;
     }
 
-    public Post getPost(Long id) {
-        return postRepository.getById(id);
-    }
-
     public Post createPost(@Valid Post post, HttpServletRequest request) {
         String token = jwtUtil.extractToken(request);
         Long userId = jwtUtil.extractUserId(token);
@@ -102,7 +97,6 @@ public class PostService {
         return postRepository.save(existingPost);
     }
 
-
     public void deletePost(Long postId,HttpServletRequest request) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + postId));
@@ -117,10 +111,4 @@ public class PostService {
         postRepository.deleteById(postId);
     }
 
-
-
-    public String getMessageFromPost(Long postId) {
-        Post post =  postRepository.getById(postId);
-        return  post.getContent();
-    }
 }

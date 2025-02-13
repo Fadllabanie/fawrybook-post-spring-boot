@@ -39,30 +39,25 @@ public class LikeService {
 
         Post post = postOptional.get();
 
-        // 🔹 Check if the user has already reacted to this post
         Optional<PostReaction> existingReaction = postReactionRepository.findByUserIdAndPost(userId, post);
 
         if (existingReaction.isPresent()) {
             PostReaction reaction = existingReaction.get();
 
             if (reaction.getReactionType() == ReactionType.LIKE) {
-                // 🔴 User has already liked this post
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(new ApiResponse<>(false, HttpStatus.BAD_REQUEST.value(), "You have already liked this post", post));
             }
 
-            // 🔹 If user previously disliked, update reaction to LIKE
             reaction.setReactionType(ReactionType.LIKE);
             postReactionRepository.save(reaction);
 
-            // 🔹 Adjust the like count (+2 because we are switching from -1 to +1)
             post.setLikes(post.getLikes() + 1);
             postRepository.save(post);
 
             return ResponseEntity.ok(new ApiResponse<>(true, HttpStatus.OK.value(), "Post liked successfully", post));
         }
 
-        // 🔹 If no reaction exists, create a new LIKE
         PostReaction reaction = new PostReaction();
         reaction.setUserId(userId);
         reaction.setPost(post);
@@ -87,11 +82,9 @@ public class LikeService {
 
         Post post = postOptional.get();
 
-        // 🔹 Check if the user has already reacted to this post
         Optional<PostReaction> existingReaction = postReactionRepository.findByUserIdAndPost(userId, post);
 
         if (existingReaction.isEmpty()) {
-            // 🔴 If user has NOT liked before, they cannot dislike
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ApiResponse<>(false, HttpStatus.BAD_REQUEST.value(), "You must like the post before disliking", post));
         }
@@ -99,16 +92,13 @@ public class LikeService {
         PostReaction reaction = existingReaction.get();
 
         if (reaction.getReactionType() == ReactionType.DISLIKE) {
-            // 🔴 User has already disliked this post
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ApiResponse<>(false, HttpStatus.BAD_REQUEST.value(), "You have already disliked this post", post));
         }
 
-        // 🔹 Change reaction from LIKE to DISLIKE
         reaction.setReactionType(ReactionType.DISLIKE);
         postReactionRepository.save(reaction);
 
-        // 🔹 Adjust the like count (-2 because we are switching from +1 to -1)
         post.setLikes(post.getLikes() - 1);
         postRepository.save(post);
 

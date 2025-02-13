@@ -20,20 +20,8 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @PostMapping("/{postId}")
-    public ResponseEntity<ApiResponse<CommentDTO>> addComment(@Valid @PathVariable Long postId, @RequestBody String text, HttpServletRequest request) {
-        CommentDTO commentDTO = commentService.addComment(postId, text,request);
-        ApiResponse<CommentDTO> response = new ApiResponse<>(
-                true,
-                HttpStatus.CREATED.value(),
-                "Comment added successfully",
-                commentDTO
-        );
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
     @GetMapping("/{postId}")
-    public ResponseEntity<ApiResponse<List<CommentDTO>>> getComments(@PathVariable Long postId) {
+    public ResponseEntity<ApiResponse<List<CommentDTO>>> list(@PathVariable Long postId) {
         List<CommentDTO> comments = commentService.getCommentsForPost(postId);
         ApiResponse<List<CommentDTO>> response = new ApiResponse<>(
                 true,
@@ -44,9 +32,20 @@ public class CommentController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/{postId}")
+    public ResponseEntity<ApiResponse<CommentDTO>> create(@Valid @PathVariable Long postId, @RequestBody String text, HttpServletRequest request) {
+        CommentDTO commentDTO = commentService.addComment(postId, text,request);
+        ApiResponse<CommentDTO> response = new ApiResponse<>(
+                true,
+                HttpStatus.CREATED.value(),
+                "Comment added successfully",
+                commentDTO
+        );
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<ApiResponse<Void>> deleteComment(@PathVariable Long commentId,HttpServletRequest request) {
+    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long commentId,HttpServletRequest request) {
         commentService.deleteComment(commentId,request);
 
         ApiResponse<Void> response = new ApiResponse<>(
