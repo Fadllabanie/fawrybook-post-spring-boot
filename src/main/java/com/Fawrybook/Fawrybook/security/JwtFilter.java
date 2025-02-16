@@ -36,17 +36,14 @@ public class JwtFilter extends OncePerRequestFilter {
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String token = authorizationHeader.substring(7);
 
-            // 🔹 Debug: Print token before sending to auth-service
-            System.out.println("🔍 Extracted Token: " + token);
-            System.out.println("🔗 Sending token to auth-service for validation...");
+            System.out.println("Extracted Token: " + token);
+            System.out.println("Sending token to auth-service for validation...");
 
             boolean isValid = validateTokenWithAuthService(token);
             if (!isValid) {
-                // Set response type to JSON
                 response.setContentType("application/json");
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-                // Create an ApiResponse for unauthorized access
                 ApiResponse<Object> errorResponse = new ApiResponse<>(
                         false,
                         HttpStatus.UNAUTHORIZED.value(),
@@ -54,14 +51,13 @@ public class JwtFilter extends OncePerRequestFilter {
                         null
                 );
 
-                // Convert ApiResponse to JSON and write to response
                 ObjectMapper objectMapper = new ObjectMapper();
                 response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
                 response.getWriter().flush();
                 return;
             }
 
-            System.out.println("✅ Token Validation Successful!");
+            System.out.println("Token Validation Successful!");
 
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(null, null, null);
@@ -75,15 +71,14 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private boolean validateTokenWithAuthService(String token) {
         try {
-            System.out.println("🔗 Sending token to auth-service for validation...");
+            System.out.println("Sending token to auth-service for validation...");
 
-            // Send token as Authorization header
             Map<String, Object> response = authServiceFeignClient.checkToken("Bearer " + token);
 
-            System.out.println("✅ Token Validation Response: " + response);
+            System.out.println("Token Validation Response: " + response);
             return response != null && Boolean.TRUE.equals(response.get("valid"));
         } catch (Exception e) {
-            System.out.println("❌ Error in Token Validation: " + e.getMessage());
+            System.out.println("Error in Token Validation: " + e.getMessage());
             return false;
         }
     }

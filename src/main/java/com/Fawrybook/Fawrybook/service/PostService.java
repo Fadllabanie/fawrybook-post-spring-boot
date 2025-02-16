@@ -49,7 +49,7 @@ public class PostService {
                     .map(comment -> new CommentDTO(comment.getId(), comment.getText(), comment.getUserId(), comment.getCreatedAt()))
                     .collect(Collectors.toList());
 
-            double averageLikes = calculateAverageLikes(); // Assuming this method calculates average likes for a specific post or globally
+            double averageLikes = calculateAverageLikes(); 
 
             return new PostDTO(
                     post.getId(),
@@ -68,7 +68,7 @@ public class PostService {
         long totalLikes = postRepository.findAll().stream().mapToLong(Post::getLikes).sum();
         long totalPosts = postRepository.count();
 
-        if (totalPosts == 0) return 0.0; // Prevent division by zero
+        if (totalPosts == 0) return 0.0; 
 
         return (double) totalLikes / totalPosts;
     }

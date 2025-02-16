@@ -14,7 +14,6 @@ public class PostReaction {
     private Long id;
 
 
-//    @JoinColumn(name = "user_id", nullable = false)
     private Long userId;
 
     @ManyToOne

@@ -26,18 +26,15 @@ public class JwtUtil {
     private long expirationTime;
 
     public JwtUtil(@Value("${jwt.secret}") String secret) {
-        System.out.println("🔗 x1 ");
         byte[] keyBytes = Base64.getDecoder().decode(secret);
         this.secretKey = Keys.hmacShaKeyFor(keyBytes);
     }
 
     public Long extractUserId(String token) {
-        System.out.println("🔗 x4 ");
         return extractClaim(token, claims -> claims.get("userId", Long.class));
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        System.out.println("🔗 x6 ");
         final Claims claims = Jwts.parserBuilder()
                 .setSigningKey(secretKey)
                 .build()
