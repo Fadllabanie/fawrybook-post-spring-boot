@@ -17,9 +17,8 @@ public class PostDTO {
     private Long userId;
     private List<CommentDTO> comments;
     private double averageLikes = 0.0;
-    private  String twitterShareUrl;
 
-    public PostDTO(Long id, String title, String content,Long userId, LocalDateTime createdAt, int likes, List<CommentDTO> comments,double averageLikes,String twitterShareUrl) {
+    public PostDTO(Long id, String title, String content,Long userId, LocalDateTime createdAt, int likes, List<CommentDTO> comments,double averageLikes) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -28,7 +27,6 @@ public class PostDTO {
         this.likes = likes;
         this.comments = comments;
         this.averageLikes = averageLikes;
-        this.twitterShareUrl = twitterShareUrl;
 
     }
 
@@ -70,13 +68,5 @@ public class PostDTO {
 
     public void setAverageLikes(double averageLikes) {
         this.averageLikes = averageLikes;
-    }
-
-    public String getTwitterShareUrl() {
-        return twitterShareUrl;
-    }
-
-    public void setTwitterShareUrl(String twitterShareUrl) {
-        this.twitterShareUrl = twitterShareUrl;
     }
 }

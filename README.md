@@ -1,6 +1,6 @@
 # Fawrybook
 
-Fawrybook is a platform that allows users to write, edit, and delete technical blog posts. Users can interact with posts by liking, disliking, and commenting on them. Additionally, users can share their posts as tweets via their Twitter account.
+Fawrybook is a platform that allows users to write, edit, and delete technical blog posts. Users can interact with posts by liking, disliking, and commenting on them. Additionally, users can share their posts as tweets via their.
 
 ## Features
 
@@ -8,7 +8,6 @@ Fawrybook is a platform that allows users to write, edit, and delete technical b
 - **Blog Post Management**: Create, edit, and delete blog posts.
 - **Interactions**: Like, dislike, and comment on posts.
 - **Post Ratings**: View the average rating of each post.
-- **Twitter Integration**: Share blog posts as tweets directly from the platform.
 - **Responsive Design**: Built with Angular 16+ for a seamless user experience.
 
 ---
@@ -30,10 +29,6 @@ Fawrybook is a platform that allows users to write, edit, and delete technical b
 - **Angular Material** for UI components.
 - **RxJS** for reactive programming.
 - **HTTP Client** for API communication.
-
-### Twitter Integration
-- **Twitter API** for sharing posts as tweets.
-- **OAuth 1.0a** for user authentication with Twitter.
 
 ---
 
@@ -79,28 +74,6 @@ mvn spring-boot:run
    The backend will start at http://localhost:8080.
 
 
-## Twitter Integration
-Create a Twitter Developer Account:
-
-Go to the Twitter Developer Portal and create a new app.
-
-Obtain the API Key, API Secret Key, Access Token, and Access Token Secret.
-
-Configure Twitter Credentials:
-
-Update the application.properties file with your Twitter credentials:
-
-
-```bash
-twitter.api.key=your_api_key
-twitter.api.secret=your_api_secret
-twitter.oauth.token=your_access_token
-twitter.oauth.secret=your_access_token_secret
-```
-3. Implement Twitter Sharing:
-
-Use the Twitter API to share posts as tweets. Example:
-
 ### API Endpoints
 
 Authentication
@@ -125,10 +98,6 @@ POST /api/posts/{id}/like: Like a post.
 POST /api/posts/{id}/dislike: Dislike a post.
 
 POST /api/posts/{id}/comment: Add a comment to a post.
-
-Twitter Integration
-POST /api/posts/{id}/tweet: Share a post as a tweet.
-
 
 ### UML Diagrams
 

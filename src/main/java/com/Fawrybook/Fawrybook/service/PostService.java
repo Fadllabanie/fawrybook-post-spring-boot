@@ -39,7 +39,7 @@ public class PostService {
                     .map(comment -> new CommentDTO(comment.getId(), comment.getText(),comment.getUserId(), comment.getCreatedAt()))
                     .collect(Collectors.toList());
 
-            return new PostDTO(post.getId(), post.getTitle(), post.getContent(), post.getUserId() ,post.getCreatedAt(), post.getLikes(), commentDTOs, averageLikes,post.getTwitterShareUrl());
+            return new PostDTO(post.getId(), post.getTitle(), post.getContent(), post.getUserId() ,post.getCreatedAt(), post.getLikes(), commentDTOs, averageLikes);
         });
     }
 
@@ -60,7 +60,6 @@ public class PostService {
                     post.getLikes(),
                     commentDTOs,
                     averageLikes,
-                    post.getTwitterShareUrl());
         });
     }
 
