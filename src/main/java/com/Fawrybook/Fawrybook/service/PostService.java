@@ -43,13 +43,14 @@ public class PostService {
         });
     }
 
+
     public Optional<PostDTO> getPostById(Long postId) {
         return postRepository.findById(postId).map(post -> {
             List<CommentDTO> commentDTOs = post.getComments().stream()
                     .map(comment -> new CommentDTO(comment.getId(), comment.getText(), comment.getUserId(), comment.getCreatedAt()))
                     .collect(Collectors.toList());
 
-            double averageLikes = calculateAverageLikes(); 
+            double averageLikes = calculateAverageLikes(); // Assuming this method calculates average likes for a specific post or globally
 
             return new PostDTO(
                     post.getId(),
@@ -59,7 +60,8 @@ public class PostService {
                     post.getCreatedAt(),
                     post.getLikes(),
                     commentDTOs,
-                    averageLikes,
+                    averageLikes
+                   );
         });
     }
 
@@ -67,9 +69,13 @@ public class PostService {
         long totalLikes = postRepository.findAll().stream().mapToLong(Post::getLikes).sum();
         long totalPosts = postRepository.count();
 
-        if (totalPosts == 0) return 0.0; 
+        if (totalPosts == 0) return 0.0; // Prevent division by zero
 
         return (double) totalLikes / totalPosts;
+    }
+
+    public Post getPost(Long id) {
+        return postRepository.getById(id);
     }
 
     public Post createPost(@Valid Post post, HttpServletRequest request) {
@@ -96,6 +102,7 @@ public class PostService {
         return postRepository.save(existingPost);
     }
 
+
     public void deletePost(Long postId,HttpServletRequest request) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + postId));
@@ -110,4 +117,10 @@ public class PostService {
         postRepository.deleteById(postId);
     }
 
+
+
+    public String getMessageFromPost(Long postId) {
+        Post post =  postRepository.getById(postId);
+        return  post.getContent();
+    }
 }
